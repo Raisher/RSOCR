@@ -17,6 +17,10 @@ void wait_for_keypressed(void) {
   }
 }
 
+void detect_ligne(void) {
+  
+}
+
 
 void init_sdl(void) {
   if (SDL_Init(SDL_INIT_VIDEO) == -1) {
