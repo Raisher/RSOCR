@@ -36,7 +36,7 @@ SDL_Surface*  binarize(SDL_Surface *s) {
   }
   return s;
 }
-
+void bite(){};
 
 static inline
 Uint8* pixelref(SDL_Surface *surf, unsigned x, unsigned y) {
