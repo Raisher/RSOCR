@@ -118,11 +118,17 @@ SDL_Surface* display_image(SDL_Surface *img) {
 }
 
 
-int main()
+int main(int argc, char *argv[])
 {
    init_sdl();
-   SDL_Surface *img = load_image("test_ocrbite.jpg");
-   display_image(img);
-   display_image(binarize(img));
-   return 0;
+   if (argc!=0) {
+     SDL_Surface *img = load_image(argv[1]);
+     display_image(img);
+     display_image(binarize(img));
+     return 0;
+   }
+   else {
+     printf("Mettre une image en parametre");
+     return 0;
+   }
 }
