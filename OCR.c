@@ -20,23 +20,62 @@ void wait_for_keypressed(void) {
 SDL_Surface*  binarize(SDL_Surface *s) {
   Uint8 r, g, b;
   double grey;
-  for(int i = 0; i < s->w; ++i)
+  for(int i = 0; i < s->h; ++i)
   {
-    for(int j = 0; j < s->h; ++j)
+    for(int j = 0; j < s->w; ++j)
     {
-      Uint32 pixel = getpixel(s,i,j);
+      Uint32 pixel = getpixel(s,j,i);
       SDL_GetRGB(pixel, s->format, &r, &g, &b);
       grey = (double)r*0.3 + (double)g*0.59+(double)b*0.11;
       if (grey<255/2)
         pixel = SDL_MapRGB(s->format, 0, 0, 0);
       else
         pixel = SDL_MapRGB(s->format,255,255,255);
-      putpixel(s, i, j, pixel);
+      putpixel(s, j, i, pixel);
     }
   }
   return s;
 }
-void bite(){};
+
+SDL_Surface* detect_line(SDL_Surface *s) {
+  Uint8 r, g, b;
+  int isblack = 0;
+  int i=0 , j=0;
+  while ((i < s->h) && (isblack == 0))
+  {
+    while ((j < s->w) && (isblack == 0)) 
+    {
+       Uint32 pixel = getpixel(s,j,i);
+       SDL_GetRGB(pixel, s->format, &r, &g, &b);
+       if ((r == 255 && g == 255 && b == 255))
+       {
+         isblack = 1;
+       }
+       j++;
+    }
+  i++;
+  }
+  for (int p = 0; p<s->w ; ++p)
+  {
+     Uint32 pixel = SDL_MapRGB(s->format,255,0,0);
+     putpixel(s,p,i-1,pixel);
+  } 
+  //int blackpixel = 1;
+  /*for(int i = 0; i < s->h && blackpixel != 0; ++i)
+  { 
+    blackpixel = 0;
+    for(int j = 0; j < s->w ; ++j)
+    {
+       Uint32 pixel = getpixel(s,j,i);
+       SDL_GetRGB(pixel, s->format, &r, &g, &b);
+       if ((r==0) && (g==0) && (b==0))
+       {
+         blackpixel++;
+       }
+    }
+  }*/
+  return s;
+}
 
 static inline
 Uint8* pixelref(SDL_Surface *surf, unsigned x, unsigned y) {
@@ -124,7 +163,8 @@ int main(int argc, char *argv[])
    if (argc!=0) {
      SDL_Surface *img = load_image(argv[1]);
      display_image(img);
-     display_image(binarize(img));
+     SDL_Surface *img2 = binarize(img);
+     display_image(detect_line(img2));
      return 0;
    }
    else {
