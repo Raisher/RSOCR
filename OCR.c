@@ -37,10 +37,74 @@ SDL_Surface*  binarize(SDL_Surface *s) {
   return s;
 }
 
-SDL_Surface* detect_line(SDL_Surface *s, int i) 
+
+// Aerer le code
+
+// FONCTION NECESSAIRE POUR DETECT_CHAR
+
+// Aerer le code
+
+void draw_char(SDL_Surface *s,int i1, int i2)
+{
+  Uint8 r, g, b;
+  Uint32 pixelvert = SDL_MapRGB(s->format,255,0,0);
+  int j = 0;
+  while (j < s->w)
+  {
+    int isblack = 0;
+    while( j < s->w && isblack == 0)
+    {
+      int k = i1;
+      while ( k < i2  && isblack == 0)
+      {
+        Uint32 pixel = getpixel(s,j,k);
+        SDL_GetRGB(pixel, s->format, &r, &g, &b);
+        if (r == 0 && g == 0 && b == 0)
+        {
+          isblack = 1;
+        }
+        k++;
+      }
+      j++;
+    }
+    for (int p = i1; p < i2 - 1; ++p)
+    {
+      putpixel(s,j-2,p,pixelvert);
+    }
+    int blackpixel = 1;
+    for(; j < s->w && blackpixel != 0; j++)
+    {
+      blackpixel = 0;
+      int l = i1;
+      for(; l < i2; ++l)
+      {
+        Uint32 pixel = getpixel(s,j,l);
+        SDL_GetRGB(pixel, s->format, &r, &g, &b);
+        if (r == 0 && g == 0 && b == 0)
+        {
+          blackpixel++;
+        }
+      }
+    }
+    //printf("j : %d\n", j);
+    for (int p = i1; p < i2 ; ++p)
+    {
+      putpixel(s,j-1,p-1,pixelvert);
+    }  
+  }
+}
+
+// Aerer le code 
+
+// FONCTION QUI TRACE LES LIGNES INF ET SUP DE CHAUE LIGNE
+
+// Aerer le code
+
+SDL_Surface* detect_line(SDL_Surface *s, int doforchar) 
 {
   Uint8 r, g, b;
   Uint32 pixelrouge = SDL_MapRGB(s->format,255,0,0);
+  int i = 0;
   while ( i < s->h )
   {
     int isblack = 0;
@@ -52,7 +116,7 @@ SDL_Surface* detect_line(SDL_Surface *s, int i)
       {
          Uint32 pixel = getpixel(s,j,i);
          SDL_GetRGB(pixel, s->format, &r, &g, &b);
-         if ((r == 0 && g == 0 && b == 0))
+         if (r == 0 && g == 0 && b == 0)
          {
            isblack = 1;
          }
@@ -60,9 +124,10 @@ SDL_Surface* detect_line(SDL_Surface *s, int i)
       }
     i++;
     }
+    int isave = i;
     for (int p = 0; p<s->w ; ++p)
     {
-       putpixel(s,p,i-1,pixelrouge);
+      putpixel(s,p,i-2,pixelrouge);
     } 
     int blackpixel = 1;
     for(; i < s->h && blackpixel != 0; ++i)
@@ -70,26 +135,32 @@ SDL_Surface* detect_line(SDL_Surface *s, int i)
       blackpixel = 0;
       for(j = 0; j < s->w ; ++j)
       {
-         Uint32 pixel = getpixel(s,j,i);
-         SDL_GetRGB(pixel, s->format, &r, &g, &b);
-         if (( r==0 ) && ( g==0 ) && ( b==0 ))
-         {
-           blackpixel++;
-         }
+        Uint32 pixel = getpixel(s,j,i);
+        SDL_GetRGB(pixel, s->format, &r, &g, &b);
+        if (r == 0 && g == 0 && b == 0)
+        {
+          blackpixel++;
+        }
       }
-
-      //printf("i : %d j : %d blackpixel : %d\n", i, j, blackpixel);
-   }
-   for (int p = 0; p<s->w ; ++p)
-   {
+    }
+    for (int p = 0; p<s->w && i < s->h ; ++p)
+    {
       putpixel(s,p,i-1,pixelrouge);
-   }
-  i++;
+    }  
+    if(doforchar == 1)
+    {
+    draw_char(s, isave - 1, i);
+    }
+    i++;
   }
   return s;
 }
 
+// Aerer le code
 
+// Fonction de TP necessaire a l'affichage et a l'utilisation de SDL
+
+// Aerer le code
 
 static inline
 Uint8* pixelref(SDL_Surface *surf, unsigned x, unsigned y) {
@@ -174,15 +245,16 @@ SDL_Surface* display_image(SDL_Surface *img) {
 int main(int argc, char *argv[])
 {
    init_sdl();
-   if (argc!=0) {
+   if (argc!=1) {
      SDL_Surface *img = load_image(argv[1]);
      display_image(img);
      SDL_Surface *img2 = binarize(img);
      display_image(detect_line(img2, 0));
+     display_image(detect_line(img2, 1));
      return 0;
    }
    else {
-     printf("Mettre une image en parametre");
+     printf("Mettre une image en parametre \n");
      return 0;
    }
 }
