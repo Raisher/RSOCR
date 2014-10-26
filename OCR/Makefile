@@ -13,4 +13,4 @@ all: OCR
 OCR: ${OBJ}
  
 clean:
-	rm -f *~ *.o
+	rm -f *~*.o

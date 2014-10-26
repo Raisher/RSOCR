@@ -13,4 +13,4 @@ all: neural_network
 OCR: ${OBJ}
  
 clean:
-	rm -f *~ *.o
+	rm -f *~*.o

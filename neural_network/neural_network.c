@@ -39,7 +39,7 @@ int main()
   initialize_weight(NUM2,NUM3,weight23,deltaWeight23);
 
 
-  for (int l = 0; l < 3000; l++) 
+  for (int l = 0; l < 5000; l++) 
   {
     for (int e = 1; e <= NUMEX; e++) 
     {
