@@ -5,10 +5,10 @@ CFLAGS= -Wall -Wextra -Werror -std=c99 -O3
 LDFLAGS= -lm
 LDLIBS= `pkg-config --libs sdl` -lSDL_image
  
-SRC= neural_network.c
+SRC= OCR.c
 OBJ= ${SRC:.c=.o}
  
-all: neural_network
+all: OCR
  
 OCR: ${OBJ}
  

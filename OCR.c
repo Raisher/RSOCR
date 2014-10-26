@@ -17,9 +17,29 @@ void wait_for_keypressed(void) {
   }
 }
 
+// Pour une meilleur binarisation
+
+int average_color(SDL_Surface *s)
+{
+  Uint8 r, g, b;
+  int sum = 0, nbpixel = 0;
+  for(int i = 0; i < s->h; ++i)
+  {
+    for(int j = 0; j < s->w; ++j)
+    {
+      Uint32 pixel = getpixel(s,j,i);
+      SDL_GetRGB(pixel, s->format, &r, &g, &b);
+      sum += ( r + g + b ) / 3;
+      nbpixel++;
+    }
+  }
+  return sum / nbpixel;
+}
+
 SDL_Surface*  binarize(SDL_Surface *s) {
   Uint8 r, g, b;
   double grey;
+  int average = average_color(s);
   for(int i = 0; i < s->h; ++i)
   {
     for(int j = 0; j < s->w; ++j)
@@ -27,7 +47,7 @@ SDL_Surface*  binarize(SDL_Surface *s) {
       Uint32 pixel = getpixel(s,j,i);
       SDL_GetRGB(pixel, s->format, &r, &g, &b);
       grey = (double)r*0.3 + (double)g*0.59+(double)b*0.11;
-      if (grey<255/2)
+      if ( grey < average )
         pixel = SDL_MapRGB(s->format, 0, 0, 0);
       else
         pixel = SDL_MapRGB(s->format,255,255,255);
