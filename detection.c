@@ -1,9 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
-#include <err.h>
-#include "pixel_operation.h"
+#include "detection.h"
 
 /*struct Vector
 {
@@ -235,20 +230,4 @@ SDL_Surface* detect_block(SDL_Surface *s)
 
 	}
 	return s;
-}
-
-int main(int argc, char *argv[])
-{
-   init_sdl();
-   if (argc!=1) {
-     SDL_Surface *img = load_image(argv[1]);
-     display_image(img);
-     SDL_Surface *img2 = binarize(img);
-     display_image(detect_block(img2));
-     return 0;
-   }
-   else {
-     printf("Mettre une image en parametre \n");
-     return 0;
-   }
 }
