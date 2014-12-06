@@ -14,15 +14,8 @@ struct Block
 {
 	int x;
 	int y;
-	//int xend;
-	//int yend;
-};
-
-struct list
-{
-	struct Block *begin;
-	struct Block *end;
-	struct list *next;
+	int xend;
+	int yend;
 };
 
 int average_color(SDL_Surface *s)
@@ -65,9 +58,9 @@ SDL_Surface*  binarize(SDL_Surface *s) {
 
 // Aerer le code
 
-// FONCTIONS UTILITAIRES
-
 int check = 0;
+
+
 
 int detect_wlines(SDL_Surface *s, int x, int y, int xmax, int ymax)
 {
@@ -100,7 +93,7 @@ int detect_wlines_side(SDL_Surface *s, int x, int y, int xmax, int ymax)
 	int blackpixel = 0;
 	int whitepixel = 0;
 	Uint32 pixel;
-	for (; y < ymax && blackpixel == 0 ; y++)
+	for (; y<ymax && blackpixel == 0 ; y++)
 	{
 		x = 0;
 		while(x < xmax && blackpixel == 0)
@@ -110,11 +103,11 @@ int detect_wlines_side(SDL_Surface *s, int x, int y, int xmax, int ymax)
 	    if (r == 0 && g == 0 && b == 0)
       {
         blackpixel = 1;
-				//printf("%d, %d, %d, %d\n",xmax, x, ymax, y);
       }
 			whitepixel++;
 			x++;
 		}
+		check++;
 	}
 	return whitepixel / ymax;
 }
@@ -128,7 +121,7 @@ int detect_endblack(SDL_Surface *s, int x, int y, int xmax, int ymax)
 	for(; x < xmax && blackpixel != 0; x++)
   {
     blackpixel = 0;
-		for(y = 0; y < ymax ; y++)
+		for(y = 0; y < ymax ; ++y)
     {
 			pixel = getpixel(s,y,x);
 			SDL_GetRGB(pixel, s->format, &r, &g, &b);
@@ -151,7 +144,7 @@ int detect_endblack_side(SDL_Surface *s, int x, int y, int xmax, int ymax)
 	for(; y < ymax && blackpixel != 0; y++)
   {
     blackpixel = 0;
-		for(x = 0; x < xmax ; x++)
+		for(x = 0; x < xmax ; ++x)
     {
 			pixel = getpixel(s,y,x);
 			SDL_GetRGB(pixel, s->format, &r, &g, &b);
@@ -165,87 +158,41 @@ int detect_endblack_side(SDL_Surface *s, int x, int y, int xmax, int ymax)
 	return nbblackline - 1;
 }
 
-// FIN FONCTIONS UTILITAIRES
 
-// DETECT_BLOCK
-
-int ybegin = 0;
-int yend = 0;
-int xbegin = 0;
-int xend = 0;
-
-/*void detect_line(SDL_Surface *s, struct list *l)
-{
-	Uint32 pixelrouge = SDL_MapRGB(s->format,255,0,0);
-	while(l != NULL)
-	{
-		int x = l->begin->x;
-		while(x < l->end->x)
-		{
-			x = x + detect_wlines(s, x, l->begin->y, l->end->x, l->end->y);
-			for(int p = l->begin->y; p < l->begin->y; p++)
-			{
-				putpixel(s, p, x, pixelrouge);
-			}
-			x = x + detect_endblack(s, x, l->begin->y, l->end->x, l->end->y);
-			for(int p = l->begin->y; p < l->begin->y; p++)
-			{
-				putpixel(s, p, x, pixelrouge);
-			}
-		}
-		l = l->next;
-	}
-}*/
-
-void detect_block_slide(SDL_Surface *s, struct Block *c)
+void detect_block_slide(SDL_Surface *s, struct Block *c, int k)
 {
 	Uint32 pixelrouge = SDL_MapRGB(s->format,255,0,0);
 	c->y = 0;
-	/*struct list *l = malloc(sizeof(struct list));
-	l->next = NULL;*/
 	while( c->y < s->w )
 	{
-		ybegin = 1 + c->y + detect_wlines_side(s, c->x, c->y, s->h, s->w);
-		c->y = ybegin;
-
-		yend = 1 + c->y + detect_endblack_side(s, c->x, c->y, s->h, s->w);
-		c->y = yend;
-    if(yend - ybegin > 1)
+		check = 0;
+		c->y = 1 + c->y + detect_wlines_side(s, c->x, c->y, c->xend, s->w);
+		
+		if( c->y < s->w)
 		{
-			/*l->begin->x = xbegin;
-			l->begin->y = ybegin;
-			l->end->x = xend;
-			l->end->y = yend;
-			l->next = NULL;*/
-			for (int p = xbegin - 1; p < xend - 1; ++p)
+			printf("%d\n", c->y);
+			for (int p = k; p < c->xend; ++p)
 			{
-				putpixel(s, yend-2, p, pixelrouge);
+				putpixel(s, c->y-2 , p, pixelrouge);
 			}
-			if( c->y < s->w)
+			for (int p = c->y; p < c->yend; ++p)
 			{
-				//printf("%d\n", c->y);
-				for (int p = xbegin - 1; p < xend -1; ++p)
-				{
-					putpixel(s, ybegin-2, p, pixelrouge);
-				}
+				putpixel(s, p, k, pixelrouge);
 			}
 		}
 
-		if (c->y < s->w && yend - ybegin > 1)	
+		c->yend = 1 + c->y + detect_endblack_side(s, c->x, c->y, c->xend, s->w);
+		c->y = c->yend;
+
+		for (int p = k; p < c->xend; ++p)
 		{
-			printf("%d, %d, %d, %d, %d\n", c->y, ybegin, yend, xbegin, xend);
-			for(int p = ybegin - 1; p < yend - 1; ++p)
-			{
-				putpixel(s, p, xbegin - 2, pixelrouge);
-			}
-			for(int p = ybegin - 1; p < yend - 1; ++p)
-			{
-				putpixel(s, p, xend - 2, pixelrouge);
-			}
+			putpixel(s, c->y-2, p, pixelrouge);
 		}
-		//l = l->next;
+		for (int p = c->y; p < c->yend; ++p)
+		{
+			putpixel(s, p, c->xend, pixelrouge);
+		}
 	}
-	//detect_line(s, l);
 }
 
 //gcc pixel_operation.c pixel_operation.h detection.c -std=c99 `pkg-config --libs sdl --cflags sdl` -lSDL_image
@@ -255,8 +202,10 @@ SDL_Surface* detect_block(SDL_Surface *s)
 	struct Block *cur = malloc(sizeof(struct Block));
 	cur->x = 0;
 	cur->y = 0;
-	//cur->xend = 0;
-	//cur->yend = 0;
+	cur->xend = 0;
+	cur->yend = 0;
+
+	int keep = 0;
 
 	Uint32 pixelrouge = SDL_MapRGB(s->format,255,0,0);
 
@@ -269,19 +218,19 @@ SDL_Surface* detect_block(SDL_Surface *s)
 		//printf("x : %d, xbegin, : %d\n", cur->x, cur->xbegin);
 		if( check > 20 )
 		{
-			if (xend != 0)
+			if (cur->xend != 0)
 			{
-				//printf("x : %d, xbegin : %d, keep : %d\n", cur->x, cur->xend, keep);
-				detect_block_slide(s, cur);
+				printf("x : %d, xbegin : %d, keep : %d\n", cur->x, cur->xend, keep);
+				detect_block_slide(s, cur, keep);
 			}
 			if(cur->x < s->h)
 			{
-				xbegin = cur->x;
+				keep = cur->x;
 			}
 		}
 
-		xend = 1 + cur->x + detect_endblack(s, cur->x, cur->y, s->h, s->w);
-		cur->x = xend;
+		cur->xend = 1 + cur->x + detect_endblack(s, cur->x, cur->y, s->h, s->w);
+		cur->x = cur->xend;
 		
 	}
 	return s;
