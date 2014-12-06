@@ -1,9 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
-#include <err.h>
-#include "pixel_operation.h"
+#include "detection.h"
 
 /*struct Vector
 {
@@ -286,6 +281,7 @@ SDL_Surface* detect_block(SDL_Surface *s)
 	}
 	return s;
 }
+<<<<<<< HEAD
 
 int main(int argc, char *argv[])
 {
@@ -303,3 +299,5 @@ int main(int argc, char *argv[])
      return 0;
    }
 }
+=======
+>>>>>>> 229a406709b66e6bd9e3e70e42c1d8e7cfc02a6e
