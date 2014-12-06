@@ -291,11 +291,12 @@ SDL_Surface* detect_block(SDL_Surface *s)
 		cur->x = xend;
 		
 	}
+	int np = SDL_SaveBMP(s,"result.bmp");
 	return s;
 }
 
 
-int main(int argc, char *argv[])
+/*int main(int argc, char *argv[])
 {
    init_sdl();
    if (argc!=1) {
@@ -310,5 +311,5 @@ int main(int argc, char *argv[])
      printf("Mettre une image en parametre \n");
      return 0;
    }
-}
+}*/
 

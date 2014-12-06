@@ -61,5 +61,6 @@ SDL_Surface* suppression(SDL_Surface *s)
 				putpixel(new_s,x,y,tab[nbcase/2]);
 			
 		}
+		int np = SDL_SaveBMP(new_s,"result.bmp");
 	return (new_s);
 }	
