@@ -160,6 +160,20 @@ int detect_endblack_side(SDL_Surface *s, int x, int y, int xmax, int ymax)
 	return nbblackline - 1;
 }
 
+struct list* add(int x, int y, int xend, int yend, struct list *l)
+{
+	struct list *t = NULL;
+	t = malloc(sizeof(struct list));
+	t->begin = malloc(sizeof(struct list));
+	t->end = malloc(sizeof(struct list));
+	t->begin->x = x;
+	t->begin->y = y;
+	t->end->x = xend;
+	t->end->y = yend;
+	t->next = l;
+	return t;
+}
+
 // FIN FONCTIONS UTILITAIRES
 
 // DETECT_BLOCK
@@ -169,35 +183,37 @@ int yend = 0;
 int xbegin = 0;
 int xend = 0;
 
-/*void detect_line(SDL_Surface *s, struct list *l)
+void detect_line(SDL_Surface *s, struct list *l)
 {
 	Uint32 pixelrouge = SDL_MapRGB(s->format,255,0,0);
 	while(l != NULL)
 	{
 		int x = l->begin->x;
-		while(x < l->end->x)
+		while(x < l->end->x - 1)
 		{
 			x = x + detect_wlines(s, x, l->begin->y, l->end->x, l->end->y);
-			for(int p = l->begin->y; p < l->begin->y; p++)
+			for(int p = l->begin->y; p < l->end->y; p++)
 			{
-				putpixel(s, p, x, pixelrouge);
+				putpixel(s, p - 1, x - 2, pixelrouge);
 			}
 			x = x + detect_endblack(s, x, l->begin->y, l->end->x, l->end->y);
-			for(int p = l->begin->y; p < l->begin->y; p++)
+			for(int p = l->begin->y; p < l->end->y; p++)
 			{
-				putpixel(s, p, x, pixelrouge);
+				putpixel(s, p - 1, x, pixelrouge);
 			}
 		}
 		l = l->next;
 	}
-}*/
+}
 
 void detect_block_slide(SDL_Surface *s, struct Block *c)
 {
 	Uint32 pixelrouge = SDL_MapRGB(s->format,255,0,0);
 	c->y = 0;
-	/*struct list *l = malloc(sizeof(struct list));
-	l->next = NULL;*/
+	struct list *l = malloc(sizeof(struct list));
+	l->begin = malloc(sizeof(struct Block));
+	l->end = malloc(sizeof(struct Block));
+	l->next = NULL;
 	while( c->y < s->w )
 	{
 		ybegin = 1 + c->y + detect_wlines_side(s, c->x, c->y, s->h, s->w);
@@ -207,11 +223,7 @@ void detect_block_slide(SDL_Surface *s, struct Block *c)
 		c->y = yend;
     if(yend - ybegin > 1)
 		{
-			/*l->begin->x = xbegin;
-			l->begin->y = ybegin;
-			l->end->x = xend;
-			l->end->y = yend;
-			l->next = NULL;*/
+			l = add(xbegin, ybegin, xend, yend, l);
 			for (int p = xbegin - 1; p < xend - 1; ++p)
 			{
 				putpixel(s, yend-2, p, pixelrouge);
@@ -228,19 +240,19 @@ void detect_block_slide(SDL_Surface *s, struct Block *c)
 
 		if (c->y < s->w && yend - ybegin > 1)	
 		{
-			printf("%d, %d, %d, %d, %d\n", c->y, ybegin, yend, xbegin, xend);
+			//printf("%d, %d, %d, %d, %d\n", c->y, ybegin, yend, xbegin, xend);
 			for(int p = ybegin - 1; p < yend - 1; ++p)
 			{
 				putpixel(s, p, xbegin - 2, pixelrouge);
 			}
 			for(int p = ybegin - 1; p < yend - 1; ++p)
 			{
-				putpixel(s, p, xend - 2, pixelrouge);
+				putpixel(s, p, xend - 1, pixelrouge);
 			}
 		}
 		//l = l->next;
 	}
-	//detect_line(s, l);
+	detect_line(s, l);
 }
 
 //gcc pixel_operation.c pixel_operation.h detection.c -std=c99 `pkg-config --libs sdl --cflags sdl` -lSDL_image
@@ -281,7 +293,7 @@ SDL_Surface* detect_block(SDL_Surface *s)
 	}
 	return s;
 }
-<<<<<<< HEAD
+
 
 int main(int argc, char *argv[])
 {
@@ -299,5 +311,4 @@ int main(int argc, char *argv[])
      return 0;
    }
 }
-=======
->>>>>>> 229a406709b66e6bd9e3e70e42c1d8e7cfc02a6e
+
