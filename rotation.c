@@ -1,10 +1,8 @@
-#include "pixel_operation.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "rotation.h"
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
+
 
 float trouver_deg(SDL_Surface *s)
 {
@@ -74,6 +72,7 @@ SDL_Surface* SDL_RotationCentralN(SDL_Surface *s, float angle)
 	my = s -> h/2.;
 
 	for(j=0; j<dst->h; j++)
+	{
 		for(i = 0;i<dst -> w; i++)
 		{
 			bx = (ceil(tcos * (i-mxdest)+ tsin * (j-mydest) +mx));
@@ -85,6 +84,8 @@ SDL_Surface* SDL_RotationCentralN(SDL_Surface *s, float angle)
 				putpixel (dst, i, j, couleur);
 			}
 		}
+	}
+	int np = SDL_SaveBMP(dst,"result.bmp");
 	return dst;
 }
 
