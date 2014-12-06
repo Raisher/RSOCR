@@ -32,9 +32,9 @@ int main(int argc, char **argv)
   GtkWidget *pWindow, *pRotWindow;
   pRotWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   pWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_title(GTK_WINDOW(pWindow), "OCR 2.0");
+  gtk_window_set_title(GTK_WINDOW(pWindow), "RS OCR");
   gtk_window_set_title(GTK_WINDOW(pRotWindow), "Rotation");
-  gtk_window_set_default_size(GTK_WINDOW(pWindow),800, 600);
+  gtk_window_set_default_size(GTK_WINDOW(pWindow),1600,900 );
   gtk_window_set_position(GTK_WINDOW(pWindow), GTK_WIN_POS_CENTER);
   gtk_window_set_position(GTK_WINDOW(pRotWindow), GTK_WIN_POS_CENTER);
   gtk_widget_show(pWindow);
@@ -180,6 +180,7 @@ void Binarize(GtkWidget *pWidget, gpointer pData)
   Boxparent = picture_struct->box_parent2;
   if (path != NULL)
   suppression(load_image(path));
+	binarize(load_image("result.bmp"));
 
   Removechildwidget(Boxparent);
   Removechildwidget(Boxparent2);
@@ -216,16 +217,16 @@ void CharaDetect(GtkWidget *pWidget, gpointer pData)
 	open_picture *picture_struct = NULL;
 	picture_struct = (open_picture*)pData;
 	parent_window = picture_struct->window_parent;
-	path=picture_struct->path;
+	path = picture_struct -> path;
 	Boxparent=picture_struct->box_parent2;
 	Boxparent2=picture_struct->box_parent;
-	detect_block(load_image(path));
+	detect_block(load_image("result.bmp"));
 	Removechildwidget(Boxparent);
 	Removechildwidget(Boxparent2);
 	pixbuf = gdk_pixbuf_new_from_file("result.bmp",&error);
 	pixbuf1=gdk_pixbuf_new_from_file(path,&error);
 	Image = Resize(Image,parent_window,pixbuf);
-	Image2=Resize(Image,parent_window,pixbuf1);
+	Image2= Resize(Image,parent_window,pixbuf1);
 	if(pixbuf!=NULL)
 	{
 		gtk_box_pack_start(GTK_BOX(Boxparent2),Image2,TRUE,TRUE,5);
@@ -260,7 +261,7 @@ void Rotation(GtkWidget *pWidget, gpointer pData)
   Removechildwidget(Boxparent);
   Removechildwidget(Boxparent2);
 
-  pixbuf = gdk_pixbuf_new_from_file("./sortie.bmp", &error);
+  pixbuf = gdk_pixbuf_new_from_file("result.bmp", &error);
   pixbuf1 = gdk_pixbuf_new_from_file(path, &error);
   Image = Resize(Image, parent_window, pixbuf);
   Image2 = Resize(Image, parent_window, pixbuf1);

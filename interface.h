@@ -4,6 +4,7 @@
 #include "rotation.h"
 #include "suppbruit.h"
 #include <glib.h>
+#include "detection.h"
 
 int main(int argc, char **argv);
 void CloseWindow(GtkWidget *pWidget, gpointer pData);
@@ -15,6 +16,7 @@ void CharaDetect(GtkWidget *pWidget, gpointer pData);
 void GommageF(GtkWidget *pWidget, gpointer pData);
 void RotBack(GtkWidget *pWidget, gpointer pData);
 void NetF(GtkWidget *pWidget, gpointer pData);
+
 
 
 

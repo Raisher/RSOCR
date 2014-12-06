@@ -55,6 +55,7 @@ SDL_Surface*  binarize(SDL_Surface *s) {
       putpixel(s, j, i, pixel);
     }
   }
+	int np = SDL_SaveBMP(s,"result.bmp");
   return s;
 }
 
