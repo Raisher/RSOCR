@@ -1,4 +1,5 @@
 #include "detection.h"
+#include "pixel_operation.h"
 
 /*struct Vector
 {
@@ -55,7 +56,6 @@ SDL_Surface*  binarize(SDL_Surface *s) {
       putpixel(s, j, i, pixel);
     }
   }
-	int np = SDL_SaveBMP(s,"result.bmp");
   return s;
 }
 
@@ -175,34 +175,76 @@ struct list* add(int x, int y, int xend, int yend, struct list *l)
 	return t;
 }
 
-// FIN FONCTIONS UTILITAIRES
+struct list* newlist()
+{
+	struct list *l = malloc(sizeof(struct list));
+	l->begin = malloc(sizeof(struct Block));
+	l->end = malloc(sizeof(struct Block));
+	l->next = NULL;
+}
 
-// DETECT_BLOCK
+struct list* recup_last(struct list *l)
+{
+	struct list *a = newlist();
+	while(l->next != NULL)
+	{
+		l = l->next;
+	}
+	int x = l->begin->x;
+	int y = l->begin->y;
+	int xe = l->end->x;
+	int ye = l->end->y;
+	a->begin->x = x;
+	a->begin->y = y;
+	a->end->x = xe;
+	a->end->y = ye;
+	//aux->begin = l->next->begin->x;
+	//aux->end = l->next->end;
+	free(l);
+	return a;
+	}
 
-int ybegin = 0;
-int yend = 0;
-int xbegin = 0;
-int xend = 0;
 
-void detect_line(SDL_Surface *s, struct list *l)
+	// FIN FONCTIONS UTILITAIRES
+
+	// DETECT_BLOCK
+
+	int ybegin = 0;
+	int yend = 0;
+	int xbegin = 0;
+	int xend = 0;
+
+	void detect_line(SDL_Surface *s, struct list *l)
 {
 	Uint32 pixelrouge = SDL_MapRGB(s->format,255,0,0);
+	struct list *a = newlist();
 	while(l != NULL)
 	{
-		int x = l->begin->x;
-		while(x < l->end->x - 1)
+		a = recup_last(l);
+		printf(" là\n");
+		int x = a->begin->x;
+		printf("ici\n");
+
+		while(x < a->end->x)
 		{
-			x = x + detect_wlines(s, x, l->begin->y, l->end->x, l->end->y);
-			for(int p = l->begin->y; p < l->end->y; p++)
+			xbegin = x + detect_wlines(s, x, a->begin->y, a->end->x, a->end->y);
+			x = xbegin;
+
+
+			//printf("x : %d, l->end->x : %d,y : %d, l->end->y : %d, s->w : %d\n",ybegin, a->begin->y, yend ,a->end->y, s->w);
+
+			for(int p = a->begin->y; p < a->end->y; p++)
 			{
 				putpixel(s, p - 1, x - 2, pixelrouge);
 			}
-			x = x + detect_endblack(s, x, l->begin->y, l->end->x, l->end->y);
-			for(int p = l->begin->y; p < l->end->y; p++)
+			xend = x + detect_endblack(s, x, a->begin->y, a->end->x, a->end->y);
+			x = xend;
+			for(int p = a->begin->y; p < a->end->y; p++)
 			{
 				putpixel(s, p - 1, x, pixelrouge);
 			}
 		}
+		printf("ici\n");
 		l = l->next;
 	}
 }
@@ -225,14 +267,14 @@ void detect_block_slide(SDL_Surface *s, struct Block *c)
     if(yend - ybegin > 1)
 		{
 			l = add(xbegin, ybegin, xend, yend, l);
-			for (int p = xbegin - 1; p < xend - 1; ++p)
+			for (int p = xbegin - 1; p < c->x - 1; ++p)
 			{
 				putpixel(s, yend-2, p, pixelrouge);
 			}
 			if( c->y < s->w)
 			{
 				//printf("%d\n", c->y);
-				for (int p = xbegin - 1; p < xend -1; ++p)
+				for (int p = xbegin - 1; p < c->x -1; ++p)
 				{
 					putpixel(s, ybegin-2, p, pixelrouge);
 				}
@@ -297,7 +339,7 @@ SDL_Surface* detect_block(SDL_Surface *s)
 }
 
 
-/*int main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
    init_sdl();
    if (argc!=1) {
@@ -312,5 +354,5 @@ SDL_Surface* detect_block(SDL_Surface *s)
      printf("Mettre une image en parametre \n");
      return 0;
    }
-}*/
+}
 
