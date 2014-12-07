@@ -183,7 +183,7 @@ void CharaDetect(GtkWidget *pWidget, gpointer pData)
 	path = picture_struct -> path;
 	Boxparent=picture_struct->parent_box2;
 	Boxparent2=picture_struct->parent_box;
-	detect_block(load_image("result.bmp"));
+	Detection(load_image("result.bmp"));
 	Removeson(Boxparent);
 	Removeson(Boxparent2);
 	pixbuf = gdk_pixbuf_new_from_file("result.bmp",&error);
