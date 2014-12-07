@@ -9,14 +9,13 @@
 #include "greytreat.h"
 
 int main(int argc, char **argv);
-void CloseWindow(GtkWidget *pWidget, gpointer pData);
+void close_w(GtkWidget *pWidget, gpointer pData);
 void Binarize(GtkWidget *Widget, gpointer pData);
-void Load(GtkWidget *pWidget, gpointer pdata);
+void Load_Image(GtkWidget *pWidget, gpointer pdata);
 void Rotation(GtkWidget *Widget, gpointer pdata);
-void Removechildwidget(GtkWidget *Boxparent);
+void Removeson(GtkWidget *Boxparent);
 void CharaDetect(GtkWidget *pWidget, gpointer pData);
-void GommageF(GtkWidget *pWidget, gpointer pData);
-void RotBack(GtkWidget *pWidget, gpointer pData);
+void backrot(GtkWidget *pWidget, gpointer pData);
 void NetF(GtkWidget *pWidget, gpointer pData);
 
 

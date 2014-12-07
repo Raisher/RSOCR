@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS= -Wall -Wextra -w -std=c99 $(shell pkg-config --cflags gtk+-3.0 sdl) $(shell sdl-config --cflags)
+CFLAGS= -Wall -w -Wextra -std=c99 $(shell pkg-config --cflags gtk+-3.0 sdl) $(shell sdl-config --cflags)
 LDFLAGS= $(shell pkg-config --libs gtk+-3.0 sdl) $(shell sdl-config --libs) -lSDL_image -lm
 SRC= pixel_operation.c binarisation.c greytreat.c rotation.c detection.c suppbruit.c interface.c
 SRCDIR = src
@@ -17,6 +17,7 @@ all: $(OBJECTS) $(TARGET)
 
 clean:
 	rm -f $(OBJECTS) $(TARGET)
+	rm result.bmp
 
 $(TARGET): $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) -o $(TARGET) $(LDFLAGS)

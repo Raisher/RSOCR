@@ -14,22 +14,14 @@ SDL_Surface* otsu_th(SDL_Surface *s,int ok)
 {
 	SDL_Surface *new_s;
 	float *hist = malloc (sizeof(float)*256);
-	int  i,x, y, max_x, max_y;
+	int max_x, max_y;
 	Uint8 r,g,b,R,G,B;
-	Uint8 r1, g1, b1;
 	max_x = s->w;
 	max_y = s->h;
 	new_s = SDL_CreateRGBSurface(SDL_HWSURFACE, s->w, s->h, 
 	s->format->BitsPerPixel, s->format->Rmask, s->format->Gmask, 
 	s->format->Bmask, s->format->Amask);
 	int N=max_x*max_y;
-
-
-	double prob[256], omega[256];
-	double mu[256];
-	double max_sigma, sigma[256];
-
-
 
 	for (int i =0; i<=256;i++)
 		hist[i]= 0.0;
