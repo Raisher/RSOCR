@@ -218,18 +218,12 @@ void detect_line(SDL_Surface * s, struct list *l)
     int x;
     while (l->next != NULL)
     {
-        printf(" là\n");
         a = recup_last(l);
-        printf(" là sa mere\n");
-        printf(" nique sa mere : %d\n", a->begin->x);
         x = a->begin->x;
         while (x < a->end->x - 1)
         {
-            printf("dzzdadza\n");
-            xbegin =
-                x + detect_wlines(s, x, a->begin->y, a->end->x, a->end->y);
+            xbegin =  x + detect_wlines(s, x, a->begin->y, a->end->x, a->end->y);
             x = xbegin;
-                 x, a->end->x, yend, a->end->y, s->w);
 
             for (int p = a->begin->y; p < a->end->y; p++)
             {
@@ -243,7 +237,6 @@ void detect_line(SDL_Surface * s, struct list *l)
                 putpixel(s, p - 1, x, pixelrouge);
             }
         }
-        printf("ici\n");
     }
 }
 
