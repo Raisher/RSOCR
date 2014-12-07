@@ -257,15 +257,18 @@ void detect_block_slide(SDL_Surface * s, struct Block *c)
         c->y = yend;
         if (yend - ybegin > 1)
         {
+						printf(" Salut ça va ? x : %d,y : %d, ybegin : %d, yend : %d\n", 
+											c->x, c->y,ybegin,yend);
+
             l = add(xbegin, ybegin, xend, yend, l);
-            for (int p = xbegin - 1; p < c->x - 1; ++p)
+            for (int p = xbegin - 1; p < xend - 1; ++p)
             {
                 putpixel(s, yend - 2, p, pixelrouge);
             }
             if (c->y < s->w)
             {
                 //printf("%d\n", c->y);
-                for (int p = xbegin - 1; p < c->x - 1; ++p)
+                for (int p = xbegin - 1; p < xend - 1; ++p)
                 {
                     putpixel(s, ybegin - 2, p, pixelrouge);
                 }
@@ -299,7 +302,7 @@ SDL_Surface *detect_block(SDL_Surface * s)
     //cur->xend = 0;
     //cur->yend = 0;
 
-    Uint32 pixelrouge = SDL_MapRGB(s->format, 255, 0, 0);
+    //Uint32 pixelrouge = SDL_MapRGB(s->format, 255, 0, 0);
 
     while (cur->x < s->h)
     {
@@ -312,7 +315,7 @@ SDL_Surface *detect_block(SDL_Surface * s)
         {
             if (xend != 0)
             {
-                //printf("x : %d, xbegin : %d, keep : %d\n", cur->x, cur->xend, keep);
+							printf("x : %d,y : %d, xbegin : %d, ybegin : %d\n", cur->x, cur->y,xbegin,xend);
                 detect_block_slide(s, cur);
             }
             if (cur->x < s->h)

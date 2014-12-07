@@ -17,5 +17,6 @@ void toGrayLevel(SDL_Surface *s)
 			Uint32 pixel = SDL_MapRGB (s -> format, grey, grey, grey);
 			putpixel(s, i,j, pixel);
 		}
+		int np = SDL_SaveBMP(s, "result.bmp"); 
 }
 		       	

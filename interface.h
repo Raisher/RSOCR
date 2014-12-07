@@ -3,8 +3,10 @@
 #include <gtk/gtk.h>
 #include "rotation.h"
 #include "suppbruit.h"
+#include "binarisation.h"
 #include <glib.h>
 #include "detection.h"
+#include "greytreat.h"
 
 int main(int argc, char **argv);
 void CloseWindow(GtkWidget *pWidget, gpointer pData);

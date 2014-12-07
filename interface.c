@@ -12,23 +12,16 @@ struct open_picture
   GtkWidget *pImage;
   GtkWidget *pRotWin;
   GtkWidget *pRotOK;
-  GtkWidget *Gommage;
-  GtkWidget *Net;
-
   GtkWidget *Entrybox;
   gchar *entry;
 };
 
-GtkWidget *Resize(GtkWidget *Image, GtkWidget *window_parent, 
-GdkPixbuf *Pixbuf_mini);
-
-void RotBack(GtkWidget *pWidget, gpointer pData);
 
 int main(int argc, char **argv)
 {
   gtk_init(&argc, &argv);
 
-  //Set Window
+  //Window
   GtkWidget *pWindow, *pRotWindow;
   pRotWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   pWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -41,7 +34,7 @@ int main(int argc, char **argv)
   g_signal_connect(G_OBJECT(pWindow), "destroy", 
   G_CALLBACK(CloseWindow), NULL);
 
-  //Table and boxes (organize buttons)
+  //Box and Buttons
   GtkWidget* pVBox1;
   GtkWidget* pVBox2;
   GtkWidget* pHBox1;
@@ -61,7 +54,7 @@ int main(int argc, char **argv)
   gtk_box_pack_start(GTK_BOX(pHBox1), GTK_WIDGET(pVBoxIm1),FALSE,TRUE,1);
   gtk_box_pack_start(GTK_BOX(pHBox1), GTK_WIDGET(pVBoxIm2),FALSE,TRUE,1);
 
-  //charge image 
+  //Set blank first
   GtkWidget *pImage1 = NULL;
   GtkWidget *pImage2;
   GdkPixbuf *pixbuf1;
@@ -69,7 +62,7 @@ int main(int argc, char **argv)
   GError *error = NULL;
   pixbuf1 = gdk_pixbuf_new_from_file("blank.jpg", &error);
   pixbuf2 = gdk_pixbuf_new_from_file("blank.jpg", &error);
-  //Set Button to Load Image and an empty image
+  //Button Load
   GtkWidget *pLoadBtn;
   open_picture picture;
 
@@ -82,53 +75,32 @@ int main(int argc, char **argv)
   pLoadBtn = gtk_button_new_with_label("Load image");
   g_signal_connect(G_OBJECT(pLoadBtn),"clicked",G_CALLBACK(Load),&picture);
 
-  //Set Button Binarize
+  //Button Binarize
   GtkWidget *pBinarizeBtn;
   pBinarizeBtn = gtk_button_new_with_label("Binarize");
   g_signal_connect(G_OBJECT(pBinarizeBtn),"clicked",G_CALLBACK(Binarize),
   &picture);
 
-  //Set Button Character Detection
+  //Button Charactere detection
   GtkWidget *pDetecBtn;
   pDetecBtn = gtk_button_new_with_label("Character Detection");
   g_signal_connect(G_OBJECT(pDetecBtn),"clicked",G_CALLBACK(CharaDetect),
   &picture);
 
-  //Set Button rotation
+  //Button Rotation
   GtkWidget *pRotateBtn;
   pRotateBtn = gtk_button_new_with_label("Rotate");
-  
-  //Set Button Filtre Median
-  GtkWidget *Gommage;
-  Gommage = gtk_button_new_with_label("Gommage");
-  g_signal_connect(G_OBJECT(Gommage),"clicked",G_CALLBACK(GommageF),
-  &picture);
 
-//Set Button Net
-  GtkWidget *Net;
-  Net = gtk_button_new_with_label("Nettete");
-  g_signal_connect(G_OBJECT(Net),"clicked",G_CALLBACK(NetF),
-  &picture);
-
-  
-
-  //Widgets insertion
+  //Widget posisitioning 
   gtk_box_pack_start(GTK_BOX(pHBox2), GTK_WIDGET(pLoadBtn), TRUE, TRUE, 5);
-  gtk_box_pack_start(GTK_BOX(pHBox2), GTK_WIDGET(Gommage), TRUE, TRUE, 5);
-  gtk_box_pack_start(GTK_BOX(pHBox2), GTK_WIDGET(Net), TRUE, TRUE, 5);
   gtk_box_pack_start(GTK_BOX(pHBox2), GTK_WIDGET(pBinarizeBtn), TRUE, TRUE, 5);
-  gtk_box_pack_start(GTK_BOX(pHBox2), GTK_WIDGET(pDetecBtn), TRUE, TRUE, 5);
-  gtk_box_pack_end(GTK_BOX(pHBox2), GTK_WIDGET(pRotateBtn), TRUE, TRUE, 5);
-
- 
-  pImage1 =  gtk_image_new_from_file("./Blank.jpeg");
-  pImage2 =  gtk_image_new_from_file("./sortie.bmp");
-  pImage1 = Resize(pImage1, pWindow, pixbuf1);
-  pImage2 = Resize(pImage2, pWindow, pixbuf2);
-  gtk_box_pack_start(GTK_BOX(pVBoxIm1),pImage1,TRUE,TRUE,5);
-  gtk_box_pack_start(GTK_BOX(pVBoxIm2),pImage2,TRUE,TRUE,5);
-
-  //Rotation window
+  gtk_box_pack_start(GTK_BOX(pHBox2), GTK_WIDGET(pRotateBtn), TRUE, TRUE, 5);
+  gtk_box_pack_end(GTK_BOX(pHBox2), GTK_WIDGET(pDetecBtn), TRUE, TRUE, 5);
+	pImage1 = Resize(pImage1,pWindow,pixbuf1);
+	pImage2 = Resize(pImage2,pWindow,pixbuf2);
+	gtk_box_pack_start(GTK_BOX(pVBoxIm1),pImage1,TRUE,TRUE,5);
+	gtk_box_pack_start(GTK_BOX(pVBoxIm2),pImage2,TRUE,TRUE,5);
+  //Rotate Entry Window
   GtkWidget *RotEntry;
   GtkWidget *RotVBox, *RotButton;
   RotButton = gtk_button_new_with_label("OK");
@@ -145,9 +117,7 @@ int main(int argc, char **argv)
   gtk_box_pack_start(GTK_BOX(RotVBox), GTK_WIDGET(RotButton), TRUE, TRUE, 5);
 
 
-  //Eternal boucle
   gtk_widget_show_all(pWindow);	
-  //gtk_widget_show_all(pRotWindow);
   gtk_main();
 
   return EXIT_SUCCESS;
@@ -179,8 +149,11 @@ void Binarize(GtkWidget *pWidget, gpointer pData)
   Boxparent2 = picture_struct->box_parent;
   Boxparent = picture_struct->box_parent2;
   if (path != NULL)
-  suppression(load_image(path));
-	binarize(load_image("result.bmp"));
+	{
+		toGrayLevel(load_image(path));
+		otsu_th(load_image("result.bmp"));
+		suppression(load_image("result.bmp"));
+	}
 
   Removechildwidget(Boxparent);
   Removechildwidget(Boxparent2);
@@ -196,15 +169,6 @@ void Binarize(GtkWidget *pWidget, gpointer pData)
   }
   gtk_widget_show_all(parent_window);
 
-}
-
-void GommageF(GtkWidget *pWidget, gpointer pData)
-{ 
-  
-}
-
-void NetF(GtkWidget *pWidget, gpointer pData)
-{ 
 }
 
 void CharaDetect(GtkWidget *pWidget, gpointer pData)
@@ -301,9 +265,6 @@ void Load(GtkWidget *pWidget, gpointer pData)
   parent_window = picture_struct->window_parent;
   Boxparent = picture_struct->box_parent;
   Boxparent2 = picture_struct->box_parent2;
-
-  //imagefrom = (picture_struct->pImage);
-  /* Creation de la fenetre de selection */
   file_selection = 
         gtk_file_chooser_dialog_new("Select the file you want to open : ",
         GTK_WINDOW(parent_window),
@@ -311,10 +272,8 @@ void Load(GtkWidget *pWidget, gpointer pData)
         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
         GTK_STOCK_OPEN, GTK_RESPONSE_OK,
         NULL);
-  /* On limite les actions a cette fenetre */
   gtk_window_set_modal(GTK_WINDOW(file_selection), TRUE);
 
-  /* Affichage fenetre */
   switch(gtk_dialog_run(GTK_DIALOG(file_selection)))
    {
     case GTK_RESPONSE_OK:
@@ -322,18 +281,17 @@ void Load(GtkWidget *pWidget, gpointer pData)
         Removechildwidget(Boxparent);
         Removechildwidget(Boxparent2);
         picture_struct->path = 
-	gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(file_selection));
+				gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(file_selection));
         pixbuf = gdk_pixbuf_new_from_file(picture_struct->path, &error);
         Image = Resize(Image, parent_window, pixbuf);
         Image2 = Resize(Image, parent_window, pixbuf);
-
         gtk_box_pack_start(GTK_BOX(Boxparent),Image,TRUE,TRUE,5);
         gtk_box_pack_start(GTK_BOX(Boxparent2),Image2,TRUE,TRUE,5);
         gtk_widget_show_all(parent_window);
        }
-      break;
+      	break;
     default:
-      break;
+      	break;
    }
   gtk_widget_destroy(file_selection);
 }
