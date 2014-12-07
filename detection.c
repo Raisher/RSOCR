@@ -56,6 +56,7 @@ SDL_Surface*  binarize(SDL_Surface *s) {
       putpixel(s, j, i, pixel);
     }
   }
+	int np = SDL_SaveBMP(s,"result.bmp");
   return s;
 }
 
@@ -179,20 +180,25 @@ struct list* newlist()
 {
 	struct list *l = malloc(sizeof(struct list));
 	l->begin = malloc(sizeof(struct Block));
+	l->begin->x = 0;
+	l->begin->y = 0;
 	l->end = malloc(sizeof(struct Block));
+	l->end->x = 0;
+	l->end->y = 0;
 	l->next = NULL;
+	return l;
 }
 
 struct list* recup_last(struct list *l)
 {
 	struct list *a = newlist();
-	while(l->next != NULL)
+	while(l->next->next != NULL)
 	{
 		l = l->next;
 	}
 	int x = l->begin->x;
-	int y = l->begin->y;
 	int xe = l->end->x;
+	int y = l->begin->y;
 	int ye = l->end->y;
 	a->begin->x = x;
 	a->begin->y = y;
@@ -200,38 +206,40 @@ struct list* recup_last(struct list *l)
 	a->end->y = ye;
 	//aux->begin = l->next->begin->x;
 	//aux->end = l->next->end;
-	free(l);
+	free(l->next);
 	return a;
-	}
+}
 
 
-	// FIN FONCTIONS UTILITAIRES
+// FIN FONCTIONS UTILITAIRES
 
-	// DETECT_BLOCK
+// DETECT_BLOCK
 
-	int ybegin = 0;
-	int yend = 0;
-	int xbegin = 0;
-	int xend = 0;
+int ybegin = 0;
+int yend = 0;
+int xbegin = 0;
+int xend = 0;
 
-	void detect_line(SDL_Surface *s, struct list *l)
+void detect_line(SDL_Surface *s, struct list *l)
 {
 	Uint32 pixelrouge = SDL_MapRGB(s->format,255,0,0);
 	struct list *a = newlist();
-	while(l != NULL)
+	int x;
+	while(l->next != NULL)
 	{
-		a = recup_last(l);
 		printf(" là\n");
-		int x = a->begin->x;
-		printf("ici\n");
-
-		while(x < a->end->x)
+		a = recup_last(l);
+		printf(" là sa mere\n");
+		printf(" nique sa mere : %d\n", a->begin->x);
+		x = a->begin->x;
+		while(x < a->end->x - 1)
 		{
+			printf("dzzdadza\n");
 			xbegin = x + detect_wlines(s, x, a->begin->y, a->end->x, a->end->y);
 			x = xbegin;
 
 
-			//printf("x : %d, l->end->x : %d,y : %d, l->end->y : %d, s->w : %d\n",ybegin, a->begin->y, yend ,a->end->y, s->w);
+			printf("x : %d, l->end->x : %d,y : %d, l->end->y : %d, s->w : %d\n",x, a->end->x, yend ,a->end->y, s->w);
 
 			for(int p = a->begin->y; p < a->end->y; p++)
 			{
@@ -245,7 +253,6 @@ struct list* recup_last(struct list *l)
 			}
 		}
 		printf("ici\n");
-		l = l->next;
 	}
 }
 
@@ -339,7 +346,7 @@ SDL_Surface* detect_block(SDL_Surface *s)
 }
 
 
-int main(int argc, char *argv[])
+/*int main(int argc, char *argv[])
 {
    init_sdl();
    if (argc!=1) {
@@ -354,5 +361,5 @@ int main(int argc, char *argv[])
      printf("Mettre une image en parametre \n");
      return 0;
    }
-}
+}*/
 
