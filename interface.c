@@ -62,6 +62,7 @@ int main(int argc, char **argv)
   GError *error = NULL;
   pixbuf1 = gdk_pixbuf_new_from_file("blank.jpg", &error);
   pixbuf2 = gdk_pixbuf_new_from_file("blank.jpg", &error);
+	gdk_pixbuf_save(pixbuf1,"result.bmp","bmp",&error,NULL);
   //Button Load
   GtkWidget *pLoadBtn;
   open_picture picture;
@@ -150,8 +151,8 @@ void Binarize(GtkWidget *pWidget, gpointer pData)
   Boxparent = picture_struct->box_parent2;
   if (path != NULL)
 	{
-		toGrayLevel(load_image(path));
-		otsu_th(load_image("result.bmp"));
+		toGrayLevel(load_image("result.bmp"));
+		otsu_th(load_image("result.bmp"),0);
 		suppression(load_image("result.bmp"));
 	}
 
@@ -220,8 +221,11 @@ void Rotation(GtkWidget *pWidget, gpointer pData)
   Boxparent2 = picture_struct->box_parent;
   entry = (gchar*)gtk_entry_get_text(GTK_ENTRY(Entrybox));
   if (entry != NULL)
-  SDL_RotationCentralN(load_image(path),strtof((char*)entry,NULL));
-
+	{
+		otsu_th(load_image(path),1);
+  	SDL_RotationCentralN(load_image("result.bmp"),strtof((char*)entry,NULL));
+		//otsu_th(load_image("result.bmp"),0);
+	}
   Removechildwidget(Boxparent);
   Removechildwidget(Boxparent2);
 
@@ -266,7 +270,7 @@ void Load(GtkWidget *pWidget, gpointer pData)
   Boxparent = picture_struct->box_parent;
   Boxparent2 = picture_struct->box_parent2;
   file_selection = 
-        gtk_file_chooser_dialog_new("Select the file you want to open : ",
+        gtk_file_chooser_dialog_new("Select a file : ",
         GTK_WINDOW(parent_window),
         GTK_FILE_CHOOSER_ACTION_OPEN,
         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
@@ -285,6 +289,7 @@ void Load(GtkWidget *pWidget, gpointer pData)
         pixbuf = gdk_pixbuf_new_from_file(picture_struct->path, &error);
         Image = Resize(Image, parent_window, pixbuf);
         Image2 = Resize(Image, parent_window, pixbuf);
+				gdk_pixbuf_save(pixbuf,"result.bmp","bmp",&error,NULL);
         gtk_box_pack_start(GTK_BOX(Boxparent),Image,TRUE,TRUE,5);
         gtk_box_pack_start(GTK_BOX(Boxparent2),Image2,TRUE,TRUE,5);
         gtk_widget_show_all(parent_window);

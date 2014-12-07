@@ -73,7 +73,7 @@ int detect_wlines(SDL_Surface * s, int x, int y, int xmax, int ymax)
     int blackpixel = 0;
     int whitepixel = 0;
     Uint32 pixel;
-    for (; x < xmax && blackpixel == 0; x++)
+    for (int x=0; x < xmax && blackpixel == 0; x++)
     {
         y = 0;
         while (y < ymax && blackpixel == 0)
@@ -98,10 +98,10 @@ int detect_wlines_side(SDL_Surface * s, int x, int y, int xmax, int ymax)
     int blackpixel = 0;
     int whitepixel = 0;
     Uint32 pixel;
-    for (; y < ymax && blackpixel == 0; y++)
+    for (int y=0; y < ymax && blackpixel == 0; y++)
     {
         x = 0;
-        while (x < xmax && blackpixel == 0)
+        while ( x < xmax && blackpixel == 0)
         {
             pixel = getpixel(s, y, x);
             SDL_GetRGB(pixel, s->format, &r, &g, &b);
@@ -126,7 +126,7 @@ int detect_endblack(SDL_Surface * s, int x, int y, int xmax, int ymax)
     for (; x < xmax && blackpixel != 0; x++)
     {
         blackpixel = 0;
-        for (y = 0; y < ymax; y++)
+        for (int y=0; y < ymax; y++)
         {
             pixel = getpixel(s, y, x);
             SDL_GetRGB(pixel, s->format, &r, &g, &b);
@@ -146,10 +146,10 @@ int detect_endblack_side(SDL_Surface * s, int x, int y, int xmax, int ymax)
     int blackpixel = 1;
     int nbblackline = 0;
     Uint32 pixel;
-    for (; y < ymax && blackpixel != 0; y++)
+    for (int y=0; y < ymax && blackpixel != 0; y++)
     {
         blackpixel = 0;
-        for (x = 0; x < xmax; x++)
+        for (int x=0; x < xmax; x++)
         {
             pixel = getpixel(s, y, x);
             SDL_GetRGB(pixel, s->format, &r, &g, &b);

@@ -85,6 +85,20 @@ SDL_Surface* SDL_RotationCentralN(SDL_Surface *s, float angle)
 			}
 		}
 	}
+
+	for (int i=0; i<dst->w;i++)
+	{
+		for (int j=0;j<dst->h;j++)
+		{
+			Uint8 R,G,B;
+			Uint32 pixel = getpixel(dst,i,j);
+			SDL_GetRGB(pixel,dst->format,&R,&G,&B);
+			if (R==0 && G == 0 && B == 0)
+				putpixel(dst,i,j,SDL_MapRGB(dst->format,255,255,255));
+			if (R==255 && B==0 && G == 0)
+				putpixel(dst,i,j,SDL_MapRGB(dst->format,0,0,0));
+		}
+	}
 	int np = SDL_SaveBMP(dst,"result.bmp");
 	return dst;
 }

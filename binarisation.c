@@ -10,7 +10,7 @@
 #define max(a,b)(a>=b?a:b)
 #define min(a,b)(a<=b?a:b)
 
-SDL_Surface* otsu_th(SDL_Surface *s)
+SDL_Surface* otsu_th(SDL_Surface *s,int ok)
 {
 	SDL_Surface *new_s;
 	float *hist = malloc (sizeof(float)*256);
@@ -72,18 +72,38 @@ SDL_Surface* otsu_th(SDL_Surface *s)
 		}
 	}
 
-	for (int x=0;x<max_x;x++)
+	if (!ok)
 	{
-		for(int y=0;y<max_y;y++)
+		for (int x=0;x<max_x;x++)
 		{
-			Uint32 cur;
-			cur = getpixel(s,x,y);
-			SDL_GetRGB(cur,s->format,&R,&G,&B);
-			int graylevel = max(0.0,min(255.0,0.299*R+0.587*G+0.114*B));
-			if(graylevel < max_k)
-				putpixel(new_s,x,y,SDL_MapRGB(s->format,0,0,0));
-			else
-				putpixel(new_s,x,y,SDL_MapRGB(s->format,255,255,255));
+			for(int y=0;y<max_y;y++)
+			{
+				Uint32 cur;
+				cur = getpixel(s,x,y);
+				SDL_GetRGB(cur,s->format,&R,&G,&B);
+				int graylevel = max(0.0,min(255.0,0.299*R+0.587*G+0.114*B));
+				if(graylevel < max_k)
+					putpixel(new_s,x,y,SDL_MapRGB(s->format,0,0,0));
+				else
+					putpixel(new_s,x,y,SDL_MapRGB(s->format,255,255,255));
+			}
+		}
+	}
+	else
+	{
+		for (int x=0;x<max_x;x++)
+		{
+			for(int y=0;y<max_y;y++)
+			{
+				Uint32 cur;
+				cur = getpixel(s,x,y);
+				SDL_GetRGB(cur,s->format,&R,&G,&B);
+				int graylevel = max(0.0,min(255.0,0.299*R+0.587*G+0.114*B));
+				if(graylevel < max_k)
+					putpixel(new_s,x,y,SDL_MapRGB(s->format,255,0,0));
+				else
+					putpixel(new_s,x,y,SDL_MapRGB(s->format,255,255,255));
+			}
 		}
 	}
 	int np = SDL_SaveBMP(new_s,"result.bmp");
