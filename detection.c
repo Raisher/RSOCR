@@ -202,10 +202,8 @@ void draw_char(SDL_Surface *s,int i1, int i2,struct charlist *list)
     {
       putpixel(s,j-1,p-1,pixelvert);
     }   
- printf("x = %d, y = %d, xend = %d, yend = %d\n",i1,j1,i2,j);
   addlist(list,i1,j1,i2,j);
-  }
- 
+  } 
 }
 
 // Aerer le code 
@@ -377,9 +375,13 @@ struct charlist* newlist()
   l->next=NULL;
   return l;
 }
-void Detection(SDL_Surface *s)
+void Detection(SDL_Surface *s,struct charlist *list)
 {
-   struct charlist *list = newlist();
+	 printf("lamereamax\n");
+	 printf("bite\n");
    s=detect_block(s,list);
+	 printf("dans\n");
+	 Norm_full(list,s);
+	 printf("thibault dort avec selena\n");
    int np = SDL_SaveBMP(s,"result.bmp");
 } 

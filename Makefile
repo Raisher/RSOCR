@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS= -Wall -w -Wextra -std=c99 $(shell pkg-config --cflags gtk+-3.0 sdl) $(shell sdl-config --cflags)
 LDFLAGS= $(shell pkg-config --libs gtk+-3.0 sdl) $(shell sdl-config --libs) -lSDL_image -lm
-SRC= pixel_operation.c binarisation.c greytreat.c rotation.c detection.c suppbruit.c interface.c
+SRC= pixel_operation.c binarisation.c greytreat.c rotation.c detection.c suppbruit.c resize.c interface.c
 SRCDIR = src
 TARGET=OCR
 #SOURCES=$(addprefix$(SRCDIR)/,$(SRC))

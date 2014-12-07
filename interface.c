@@ -5,6 +5,7 @@ typedef struct struct_picture struct_picture;
 struct struct_picture
 {
   GtkWidget *parent_window;
+	struct charlist *list;
   gchar *path;
   GtkWidget *picture;
   GtkWidget *parent_box;
@@ -20,7 +21,6 @@ struct struct_picture
 int main(int argc, char **argv)
 {
   gtk_init(&argc, &argv);
-
   //Window
   GtkWidget *pWindow, *RotWindow;
   RotWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -66,6 +66,8 @@ int main(int argc, char **argv)
   //Button Load_Image
   GtkWidget *pLoad_ImageBtn;
   struct_picture picture;
+	struct charlist *list = newlist();
+	picture.list=list;
 
   picture.Image = Image1;
   picture.path = NULL;
@@ -172,6 +174,7 @@ void Binarize(GtkWidget *pWidget, gpointer pData)
 
 void CharaDetect(GtkWidget *pWidget, gpointer pData)
 {
+	printf("grossechatte\n");
 	GtkWidget *Image =NULL, *Image2;
 	GtkWidget *Boxparent, *Boxparent2, *parent_window=pWidget;
 	GdkPixbuf *pixbuf, *pixbuf1;
@@ -180,10 +183,14 @@ void CharaDetect(GtkWidget *pWidget, gpointer pData)
 	struct_picture *picture_struct = NULL;
 	picture_struct = (struct_picture*)pData;
 	parent_window = picture_struct->parent_window;
+	struct charlist *list = picture_struct->list;
 	path = picture_struct -> path;
+	printf("chatte\n");
 	Boxparent=picture_struct->parent_box2;
 	Boxparent2=picture_struct->parent_box;
-	Detection(load_image("result.bmp"));
+	printf("chatteapoildure\n");
+	Detection(load_image("result.bmp"),list);
+	printf("chattereussie\n");
 	Removeson(Boxparent);
 	Removeson(Boxparent2);
 	pixbuf = gdk_pixbuf_new_from_file("result.bmp",&error);
