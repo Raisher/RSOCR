@@ -1,17 +1,10 @@
 #include "detection.h"
 #include "pixel_operation.h"
 
-/*struct Vector
-{
-    int x;
-    int y;
-};*/
 struct Block
 {
     int x;
     int y;
-    //int xend;
-    //int yend;
 };
 
 
@@ -97,7 +90,6 @@ int detect_wlines_side(SDL_Surface * s, int x, int y, int xmax, int ymax)
             if (r == 0 && g == 0 && b == 0)
             {
                 blackpixel = 1;
-                //printf("%d, %d, %d, %d\n",xmax, x, ymax, y);
             }
             whitepixel++;
             x++;
@@ -197,7 +189,6 @@ void draw_char(SDL_Surface *s,int i1, int i2,struct charlist *list)
         }
       }
     }
-    //printf("j : %d\n", j);
     for (int p = i1; p < i2 ; ++p)
     {
       putpixel(s,j-1,p-1,pixelvert);
@@ -299,7 +290,6 @@ SDL_Surface* detect_block_slide(SDL_Surface * s, struct Block *c,struct charlist
             }
             if (c->y < s->w)
             {
-                //printf("%d\n", c->y);
                 for (int p = xbegin - 1; p < xend - 1; ++p)
                 {
                     putpixel(s, ybegin - 2, p, pixelrouge);
@@ -310,7 +300,6 @@ SDL_Surface* detect_block_slide(SDL_Surface * s, struct Block *c,struct charlist
 
         if (c->y < s->w && yend - ybegin > 1)
         {
-            //printf("%d, %d, %d, %d, %d\n", c->y, ybegin, yend, xbegin, xend);
             for (int p = ybegin - 1; p < yend - 1; ++p)
             {
                 putpixel(s, p, xbegin - 2, pixelrouge);
@@ -320,20 +309,16 @@ SDL_Surface* detect_block_slide(SDL_Surface * s, struct Block *c,struct charlist
                 putpixel(s, p, xend - 1, pixelrouge);
             }
         }
-        //l = l->next;
     }
     return s;
 }
 
-//gcc pixel_operation.c pixel_operation.h detection.c -std=c99 `pkg-config --libs sdl --cflags sdl` -lSDL_image
 
 SDL_Surface *detect_block(SDL_Surface * s,struct charlist *list)
 {
     struct Block *cur = malloc(sizeof (struct Block));
     cur->x = 0;
     cur->y = 0;
-    //cur->xend = 0;
-    //cur->yend = 0;
 
     Uint32 pixelrouge = SDL_MapRGB(s->format, 255, 0, 0);
 
@@ -343,12 +328,10 @@ SDL_Surface *detect_block(SDL_Surface * s,struct charlist *list)
 
         xbegin = 1 + cur->x + detect_wlines(s, cur->x, cur->y, s->h, s->w);
 
-        //printf("x : %d, xbegin, : %d\n", cur->x, cur->xbegin);
         if (check > 20)
         {
             if (xend != 0)
             {
-                //printf("x : %d, xbegin : %d, keep : %d\n", cur->x, cur->xend, keep);
                 s=detect_block_slide(s, cur,list);
             }
             if (cur->x < s->h)
@@ -377,11 +360,7 @@ struct charlist* newlist()
 }
 void Detection(SDL_Surface *s,struct charlist *list)
 {
-	 printf("lamereamax\n");
-	 printf("bite\n");
    s=detect_block(s,list);
-	 printf("dans\n");
 	 Resizechar(s,list);
-	 printf("thibault dort avec selena\n");
    int np = SDL_SaveBMP(s,"result.bmp");
 } 

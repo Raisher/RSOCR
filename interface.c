@@ -21,8 +21,8 @@ struct struct_picture
 int main(int argc, char **argv)
 {
   gtk_init(&argc, &argv);
-  //Window
-  GtkWidget *pWindow, *RotWindow;
+  
+	GtkWidget *pWindow, *RotWindow;
   RotWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   pWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title(GTK_WINDOW(pWindow), "RS OCR");
@@ -34,7 +34,6 @@ int main(int argc, char **argv)
   g_signal_connect(G_OBJECT(pWindow), "destroy",
   G_CALLBACK(close_w), NULL);
 
-  //Box and Buttons
   GtkWidget* Box1;
   GtkWidget* Box2;
   GtkWidget* Hbox1;
@@ -54,7 +53,6 @@ int main(int argc, char **argv)
   gtk_box_pack_start(GTK_BOX(Hbox1),GTK_WIDGET(BoxIm1),FALSE,TRUE,1);
   gtk_box_pack_start(GTK_BOX(Hbox1),GTK_WIDGET(BoxIm2),FALSE,TRUE,1);
 
-  //Set blank first
   GtkWidget *Image1 = NULL;
   GtkWidget *Image2;
   GdkPixbuf *pixbuf1;
@@ -63,8 +61,8 @@ int main(int argc, char **argv)
   pixbuf1 = gdk_pixbuf_new_from_file("blank.jpg", &error);
   pixbuf2 = gdk_pixbuf_new_from_file("blank.jpg", &error);
 	gdk_pixbuf_save(pixbuf1,"result.bmp","bmp",&error,NULL);
-  //Button Load_Image
-  GtkWidget *pLoad_ImageBtn;
+  
+	GtkWidget *pLoad_ImageBtn;
   struct_picture picture;
 	struct charlist *list = newlist();
 	picture.list=list;
@@ -78,23 +76,19 @@ int main(int argc, char **argv)
   pLoad_ImageBtn = gtk_button_new_with_label("Load Image");
   g_signal_connect(G_OBJECT(pLoad_ImageBtn),"clicked",G_CALLBACK(Load_Image)	,&picture);
 
-  //Button Binarize
   GtkWidget *pBinarizeBtn;
   pBinarizeBtn = gtk_button_new_with_label("Binarize");
   g_signal_connect(G_OBJECT(pBinarizeBtn),"clicked",G_CALLBACK(Binarize),
   &picture);
 
-  //Button Charactere detection
   GtkWidget *pDetecBtn;
   pDetecBtn = gtk_button_new_with_label("Detection");
   g_signal_connect(G_OBJECT(pDetecBtn),"clicked",G_CALLBACK(CharaDetect),
   &picture);
 
-  //Button Rotation
   GtkWidget *pRotateBtn;
   pRotateBtn = gtk_button_new_with_label("Rotate");
 
-  //Widget posisitioning 
   gtk_box_pack_start(GTK_BOX(Hbox2), GTK_WIDGET(pLoad_ImageBtn), TRUE, TRUE, 5);
   gtk_box_pack_start(GTK_BOX(Hbox2), GTK_WIDGET(pBinarizeBtn), TRUE, TRUE, 5);
   gtk_box_pack_start(GTK_BOX(Hbox2), GTK_WIDGET(pRotateBtn), TRUE, TRUE, 5);
@@ -103,7 +97,8 @@ int main(int argc, char **argv)
 	Image2 = Resize(Image2,pWindow,pixbuf2);
 	gtk_box_pack_start(GTK_BOX(BoxIm1),Image1,TRUE,TRUE,5);
 	gtk_box_pack_start(GTK_BOX(BoxIm2),Image2,TRUE,TRUE,5);
-  //Rotate Entry Window
+  
+	
   GtkWidget *RotEntry;
   GtkWidget *RotVBox, *RotButton;
   RotButton = gtk_button_new_with_label("OK");
@@ -174,7 +169,6 @@ void Binarize(GtkWidget *pWidget, gpointer pData)
 
 void CharaDetect(GtkWidget *pWidget, gpointer pData)
 {
-	printf("grossechatte\n");
 	GtkWidget *Image =NULL, *Image2;
 	GtkWidget *Boxparent, *Boxparent2, *parent_window=pWidget;
 	GdkPixbuf *pixbuf, *pixbuf1;
@@ -185,12 +179,9 @@ void CharaDetect(GtkWidget *pWidget, gpointer pData)
 	parent_window = picture_struct->parent_window;
 	struct charlist *list = picture_struct->list;
 	path = picture_struct -> path;
-	printf("chatte\n");
 	Boxparent=picture_struct->parent_box2;
 	Boxparent2=picture_struct->parent_box;
-	printf("chatteapoildure\n");
 	Detection(load_image("result.bmp"),list);
-	printf("chattereussie\n");
 	Removeson(Boxparent);
 	Removeson(Boxparent2);
 	pixbuf = gdk_pixbuf_new_from_file("result.bmp",&error);
@@ -226,7 +217,6 @@ void Rotation(GtkWidget *pWidget, gpointer pData)
 	{
 		otsu_th(load_image(path),1);
   	SDL_RotationCentralN(load_image("result.bmp"),strtof((char*)entry,NULL));
-		//otsu_th(load_image("result.bmp"),0);
 	}
   Removeson(Boxparent);
   Removeson(Boxparent2);
