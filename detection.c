@@ -381,7 +381,7 @@ void Detection(SDL_Surface *s,struct charlist *list)
 	 printf("bite\n");
    s=detect_block(s,list);
 	 printf("dans\n");
-	 Norm_full(list,s);
+	 Resizechar(s,list);
 	 printf("thibault dort avec selena\n");
    int np = SDL_SaveBMP(s,"result.bmp");
 } 

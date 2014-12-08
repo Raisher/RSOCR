@@ -3,24 +3,20 @@
 #include <stdlib.h>
 #include "detection.h"
 
-struct doublearray
-{
+struct doublearray {
 	unsigned sizeX;
-	double *elm;
+	double *elements;
 };
 
-struct doublearray2D
-{
+struct doublearray2D{
 	unsigned sizeX;
 	unsigned sizeY;
-	struct doublearray *elm;
+	int** elements;
 };
 
-struct listmat
-{
+struct listmat{
 	struct doublearray2D mat;
-	struct listmat *next;
+	struct list *next;
 };
 
-int** Norm(SDL_Surface *s, 
-																	int x, int y, int xend, int yend);
+void Resizechar(SDL_Surface *s, struct charlist *list);
