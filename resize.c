@@ -67,7 +67,7 @@ void Resizechar(SDL_Surface *s, struct charlist *list)
 			}
 		}
 
-		if(xend + 30 > s->h)
+		if(xend + 50 > s->h)
 		{
 			for (int i = 0; i<16; i++)
 			{
