@@ -16,9 +16,11 @@ struct doublearray2D
 	struct doublearray *elm;
 };
 
-struct listmat{
+struct listmat
+{
 	struct doublearray2D mat;
 	struct listmat *next;
 };
 
-struct doublearray2D Norm(struct doublearray2D, SDL_Surface *s, int x, int y, int xend, int yend);
+int** Norm(SDL_Surface *s, 
+																	int x, int y, int xend, int yend);

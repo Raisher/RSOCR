@@ -2,11 +2,17 @@
 
 void addlistmat(struct listmat *listmat, struct doublearray2D mat)
 {
+	printf("rayan mange du saucisson\n");
 	while(listmat->next!=NULL)
+	{
+		printf("rayan prend des prot\n");
 		listmat=listmat->next;
+	}
 	struct listmat *aux=malloc(sizeof(struct listmat));
+	printf("rayan joue a wow\n");
 	aux->mat=mat;
 	aux->next=NULL;
+	printf("mode medecine\n");
 	listmat->next=aux;
 }
 
@@ -14,7 +20,7 @@ struct doublearray new_doublearray(unsigned i)
 {
 	double *x=malloc(i*sizeof(double));
 	for(unsigned k =0; k<i; k++)
-		x[k]=0;
+		x[k]=1;
 	struct doublearray array;
 	array.sizeX=i;
 	array.elm=x;
@@ -34,30 +40,30 @@ struct doublearray2D new_doublearray2D(unsigned i,unsigned j)
 	array.elm=x;
 	return array;
 }
-void printmat(struct doublearray2D mat)
+void printmat(int **mat)
 {
 	for(int i=0;i<20;i++)
 	{
 		for(int j=0;j<20;j++)
 		{
-			printf("%d ",mat.elm[i].elm[j]);
+			printf("%d ",mat[i][j]);
 		}
 		printf("\n");
 	}
 	printf("\n");
 }
-void printlistmat(struct listmat *listmat)
-{
-   while (listmat!=NULL)
-		 printmat(listmat->mat);
-}
-struct doublearray2D Norm(struct doublearray2D matend, SDL_Surface *s,int x,int y, int xend, int yend)
+
+int** Norm(SDL_Surface *s, int x,int y, int xend, int yend)
 {
 	int t1=xend-x;
 	int t2=yend-y;
 	Uint8 r,g,b;
-	struct doublearray2D mat1 = new_doublearray2D(t1,t2);
-	
+	int **mat1 = malloc(t1*(sizeof(int*)));
+	for (x=0;x<t2;x++)
+		mat1[x]=malloc(t2*(sizeof(int)));
+	int **matend = malloc(20*(sizeof(int*)));
+	for (x=0;x<20;x++)
+		matend[x]=malloc(20*(sizeof(int)));
 	for(int i=0;i<t1;i++)
 	{
 		for(int j=0;j<t2;j++)
@@ -66,33 +72,32 @@ struct doublearray2D Norm(struct doublearray2D matend, SDL_Surface *s,int x,int 
 			SDL_GetRGB(pixel,s->format,&r,&g,&b);
 			if (g==0)
 			{
-				mat1.elm[i].elm[j]=1;
-				printf("On passe par là ?");
+				printf("bite\n");
+				mat1[j][i]=1;
 			}
 			else
-				mat1.elm[i].elm[j]=0;
-				printf("enculé\n");
+			{
+				printf("bite2\n");
+				mat1[j][i]=0;
+			}
 		}
 	}
-  /*for (int i=0;i<20;i++)
+  for (int i=0;i<20;++i)
 	{
-		for(int j = 0; j<20;j++)
+		for(int j = 0; j<20;++j)
 		{	
-			//matend.elm[i].elm[j] = mat1.elm[(i*t1)/20].elm[(j*t2)/20];
-			matend.elm[i].elm[j] = 1;
+			printf("cul\n");
+			matend[j][i] = mat1[(j*t1)/20][(i*t2)/20];	
 		}
-	}*/
+	}
+	printf("rayan bosse dure\n");
   return matend;
 }
 
 void Norm_full(struct charlist *list,SDL_Surface *s)
 {
 	list=list->next;
-	list=list->next;
 	int x,xend,y,yend;
-	printf("chatte\n");
-	struct listmat *listmat = malloc(sizeof(struct listmat));
-	struct doublearray2D mat = new_doublearray2D(20,20);
 	while(list->next!=NULL)
 	{
 		printf("rayan kikine\n");
@@ -110,12 +115,14 @@ void Norm_full(struct charlist *list,SDL_Surface *s)
 
 		
 		printf("rayan mange du jambon %d\n",yend);
-		addlistmat(listmat,Norm(mat,s,x,y,xend,yend));
+		//matend = Norm(matend,s,x,y,xend,yend);
 	  printf("faker\n");
-    printlistmat(listmat);
+    printmat(Norm(s,x,y,xend,yend));
 		//reseau de neuronne sur mat;
 		list=list->next;
 		printf("rayan oublie son tapis de priere\n");
 
 	}
 }
+
+
