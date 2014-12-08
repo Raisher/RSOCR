@@ -1,54 +1,54 @@
 #include "resize.h"
-void Resizechar(SDL_Surface *s, struct charlist *list) {
+void Resizechar(SDL_Surface *s, struct charlist *list) 
+{
   list=list->next;
-  
   while (list->next!=NULL)
   {
 		int x = list->x;
 		//printf("%d ",x);
 		int y = list->y;
-	//printf("%d ",y);
+	  //printf("%d ",y);
 		int xend = list->xend;
-	//printf("%d ",xend);
+		//printf("%d ",xend);
 		int yend = list->yend;
-		int width = yend-y;
-		int height = xend-x;
+		int width = yend - y;
+		int height = xend - x;
 		//printf("%d %d %d\n",yend,width,height);
 		int widthDesired = 16;
 		int heightDesired = 16;
 		Uint8 r,g,b;
 
-		int **charArray = malloc((height)*sizeof(int*));
-		for (size_t i=0; i<height;i++)
-			charArray[i] = malloc((width)*sizeof(int));
+		int **charArray = malloc((height) * sizeof(int*));
+		for (size_t i = 0; i<height ; i++)
+			charArray[i] = malloc((width) * sizeof(int));
 
 		struct doublearray2D *lastChar = malloc(sizeof(struct doublearray2D));
-					lastChar->sizeX=yend-y;
-		lastChar->sizeY=xend-x;
-		lastChar->elements=charArray;
-		for(int i=0;i<height;i++)
+					lastChar->sizeX = width;
+		lastChar->sizeY = height;
+		lastChar->elements = charArray;
+		
+		for(int i=0 ;i < height ;i++)
 		{
-			for(int j=0;j<width;j++)
-			{	
-				Uint32 pixel = getpixel(s,j+y-1,i+x-1);
-				SDL_GetRGB(pixel,s->format,&r,&g,&b);
-				if (r==0&&g==0&&b==0)
+			for(int j=0 ;j < width ;j++)
+			{
+				Uint32 pixel = getpixel(s, j + y - 1 ,i + x - 1);
+				SDL_GetRGB(pixel, s->format, &r, &g, &b);	
+				if (r==255 && g==255 && b==255)
 				{
-					charArray[i][j]=1;
+					charArray[i][j] = 0;
 				}
 				else
 				{
-					charArray[i][j]=0;
+					charArray[i][j] = 1;
 				}
-				
 			}
 		}
-		
+
 		int **pixArray = calloc((16), sizeof (int *));
 		for (size_t i = 0; i < 16; i++)
 			pixArray[i] = calloc((16), sizeof (int));
 
-		struct doublearray2D *charByChar = malloc(sizeof (struct doublearray2D));
+		struct doublearray2D *charByChar = malloc(sizeof(struct doublearray2D));
 		charByChar->sizeX = 16;
 		charByChar->sizeY = 16;
 		charByChar->elements = pixArray;
@@ -66,13 +66,18 @@ void Resizechar(SDL_Surface *s, struct charlist *list) {
 				}
 			}
 		}
-		for (int i = 0; i<16; i++)
+
+		if(xend + 30 > s->h)
 		{
-			for (int j=0; j<16;j++)
+			for (int i = 0; i<16; i++)
 			{
-				printf("%d ",charByChar->elements[j][i]);
+				for (int j=0; j<16; j++)
+				{
+					printf("%d ",charByChar->elements[j][i]);
+				}
+				printf("\n");
 			}
-			printf("\n");
+			printf("\n  --------------------------- \n");
 		}
 		list=list->next;
 	}	
